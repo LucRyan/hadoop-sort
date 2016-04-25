@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Sort.iml" filepath="$PROJECT_DIR$/Sort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Sort.iml" filepath="$PROJECT_DIR$/.idea/modules/Sort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Sort_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Sort_main.iml" group="Sort" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Sort_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Sort_test.iml" group="Sort" />
     </modules>
   </component>
 </project>

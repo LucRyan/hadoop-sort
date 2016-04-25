@@ -1,6 +1,4 @@
-/**
- * Created by RyanW on 4/23/16.
- */
+package com.ryan.hadoop;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -16,6 +14,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+/**
+ * Created by RyanW on 4/23/16.
+ */
 public class SortKeyAscending {
     public static class Map extends Mapper<LongWritable, Text, Text, Text> {
         private Text word = new Text();

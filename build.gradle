@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.apache.hadoop', name: 'hadoop-core', version: '0.20.2'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.hadoop:hadoop-examples:1.2.1'
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+task(generateRandomTextFile, dependsOn: 'classes', type: JavaExec) {
+    mainClassName = "com.ryan.hadoop.GenerateRandomTextFile"
+    main = 'com.ryan.hadoop.GenerateRandomTextFile'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task(sortKeyAscending, dependsOn: 'classes', type: JavaExec) {
+    mainClassName = "com.ryan.hadoop.SortKeyAscending"
+    main = 'com.ryan.hadoop.SortKeyAscending'
+    classpath = sourceSets.main.runtimeClasspath
+
+    args 'data/data.txt', 'data/out'
+}

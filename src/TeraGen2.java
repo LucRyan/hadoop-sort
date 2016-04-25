@@ -1,4 +1,4 @@
-import java.io.DataInput; 
+import java.io.DataInput;
 import java.io.DataOutput; 
 import java.io.IOException; 
 import java.util.ArrayList; 
@@ -21,7 +21,7 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext; 
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; 
 import org.apache.hadoop.util.Tool; 
-import org.apache.hadoop.util.ToolRunner; 
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.hadoop.examples.terasort.*;
  
 /**
@@ -249,9 +249,9 @@ public class TeraGen2 extends Configured implements Tool {
   } 
  
   /**
-   * Add a random key to the text 
-   *  
-   * @param rowId 
+   * Add a random key to the text
+   *
+   * @param rowId
    */ 
   private void addKey() { 
    for (int i = 0; i < 3; i++) { 

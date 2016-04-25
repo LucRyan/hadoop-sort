@@ -1,21 +1,18 @@
+package com.ryan.hadoop;
+
+import org.apache.commons.lang.RandomStringUtils;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by RyanW on 4/24/16.
  */
-import org.apache.commons.lang.RandomStringUtils;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 public class GenerateRandomTextFile {
     private static final int ITERATIONS = 1;
     private static final double MEG = (Math.pow(1024, 2));
-    private static final int RECORD_COUNT = 4000000;
+    private static final int RECORD_COUNT = 1000000;
     private static final int RECSIZE = 10;
 
     public static void main(String[] args) throws Exception {
@@ -26,7 +23,8 @@ public class GenerateRandomTextFile {
             records.add(line);
             size += line.getBytes().length;
         }
-        System.out.println(records.size() + " 'records'");
+        System.out.println("\n-------------------------- Generating Start ----------------------------");
+        System.out.println(records.size() + " Random Text");
         System.out.println(size / MEG + " MB");
 
         for (int i = 0; i < ITERATIONS; i++) {
@@ -47,6 +45,7 @@ public class GenerateRandomTextFile {
             write(records, bufferedWriter);
         } finally {
             System.out.print("Output File Path: " + file.getAbsolutePath());
+            System.out.println("\n-------------------------- Generating End ----------------------------\n");
         }
     }
 
