@@ -35,6 +35,6 @@ task(validateResult, dependsOn: 'classes', type: JavaExec) {
     main = 'com.ryan.hadoop.ValidateResult'
     classpath = sourceSets.main.runtimeClasspath
 
-    args 'data/data.txt', 'data/out'
+    args 'data/out/part-r-00000', 'data/validate'
 }
 
