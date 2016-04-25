@@ -29,3 +29,12 @@ task(sortKeyAscending, dependsOn: 'classes', type: JavaExec) {
 
     args 'data/data.txt', 'data/out'
 }
+
+task(validateResult, dependsOn: 'classes', type: JavaExec) {
+    mainClassName = "com.ryan.hadoop.ValidateResult"
+    main = 'com.ryan.hadoop.ValidateResult'
+    classpath = sourceSets.main.runtimeClasspath
+
+    args 'data/data.txt', 'data/out'
+}
+
