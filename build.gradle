@@ -22,9 +22,9 @@ task(generateRandomTextFile, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task(sortKeyAscending, dependsOn: 'classes', type: JavaExec) {
-    mainClassName = "com.ryan.hadoop.SortKeyAscending"
-    main = 'com.ryan.hadoop.SortKeyAscending'
+task(sortValueAscending, dependsOn: 'classes', type: JavaExec) {
+    mainClassName = "com.ryan.hadoop.sort.SortValueAscending"
+    main = 'com.ryan.hadoop.sort.SortValueAscending'
     classpath = sourceSets.main.runtimeClasspath
 
     args 'data/data.txt', 'data/out'

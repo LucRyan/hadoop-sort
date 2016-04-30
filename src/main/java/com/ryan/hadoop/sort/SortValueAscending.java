@@ -1,4 +1,4 @@
-package com.ryan.hadoop;
+package com.ryan.hadoop.sort;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -17,39 +17,44 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 /**
  * Created by RyanW on 4/23/16.
  */
-public class SortKeyAscending {
-    public static class Map extends Mapper<LongWritable, Text, Text, Text> {
-        private Text word = new Text();
-
+public class SortValueAscending {
+    public static class Map extends Mapper<LongWritable, Text, CompositeKeyWritable, NullWritable> {
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             StringTokenizer tokenizer = new StringTokenizer(line);
+            long count = 0;
+
             while (tokenizer.hasMoreTokens()) {
-                word.set(tokenizer.nextToken()) ;
-                context.write(word, new Text());
+                context.write(new CompositeKeyWritable(count, tokenizer.nextToken()), NullWritable.get());
+
+                count++;
             }
         }
     }
 
-    public static class Reduce extends Reducer<Text, Text, Text, Text> {
+    public static class Reduce extends Reducer<CompositeKeyWritable, NullWritable, CompositeKeyWritable, NullWritable> {
+        @Override
+        public void reduce(CompositeKeyWritable key, Iterable<NullWritable> values,
+                           Context context) throws IOException, InterruptedException {
 
-        public void reduce(Text key, Iterable<Text> values, Context context)
-                throws IOException, InterruptedException {
-            context.write(key, new Text());
+            for (NullWritable value : values) {
+                context.write(key, NullWritable.get());
+            }
         }
     }
 
-    public static class AscendingKeyComparator extends WritableComparator {
-        protected AscendingKeyComparator() {
-            super(Text.class, true);
+    public static class SecondarySortBasicCompKeySortComparator extends WritableComparator {
+
+        protected SecondarySortBasicCompKeySortComparator() {
+            super(CompositeKeyWritable.class, true);
         }
 
-        @SuppressWarnings("rawtypes")
         @Override
         public int compare(WritableComparable w1, WritableComparable w2) {
-            Text key1 = (Text) w1;
-            Text key2 = (Text) w2;
-            return key1.compareTo(key2);
+            CompositeKeyWritable key1 = (CompositeKeyWritable) w1;
+            CompositeKeyWritable key2 = (CompositeKeyWritable) w2;
+
+            return key1.getText().compareTo(key2.getText());
         }
     }
 
@@ -63,22 +68,23 @@ public class SortKeyAscending {
         clearFolder(args[1]);
 
         JobConf conf = new JobConf();
-
         Job job = new Job(conf);
 
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setJobName("Secondary sort example");
+
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         job.setMapperClass(Map.class);
+        job.setMapOutputKeyClass(CompositeKeyWritable.class);
+        job.setMapOutputValueClass(NullWritable.class);
+        job.setPartitionerClass(SecondarySortBasicPartitioner.class);
+        job.setSortComparatorClass(SecondarySortBasicCompKeySortComparator.class);
         job.setReducerClass(Reduce.class);
+        job.setOutputKeyClass(CompositeKeyWritable.class);
+        job.setOutputValueClass(NullWritable.class);
 
-        job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
-
-        job.setSortComparatorClass(AscendingKeyComparator.class);
-
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        job.setNumReduceTasks(8);
 
         job.waitForCompletion(true);
     }
