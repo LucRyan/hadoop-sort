@@ -27,18 +27,13 @@ import java.util.StringTokenizer;
 public class ValidateResult {
     public static class Map extends Mapper<LongWritable, Text, Text, Text> {
         private Text word = new Text();
-        private Text countKey = new Text();
 
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             StringTokenizer tokenizer = new StringTokenizer(line);
-            int count = 0;
             while (tokenizer.hasMoreTokens()) {
-                countKey.set(String.valueOf(count));
                 word.set(tokenizer.nextToken()) ;
-                context.write(countKey, word);
-
-                count++;
+                context.write(word, word);
             }
         }
     }
@@ -48,24 +43,21 @@ public class ValidateResult {
                 throws IOException, InterruptedException {
             boolean valid = true;
             Text previous = null;
-
             for (Iterator<Text> i = values.iterator(); i.hasNext();)
             {
                 Text current = i.next();
                 if(previous != null)
                 {
-                    valid = compare(previous, current) < 0;
+                    valid = compare(previous, current) <= 0;
                 }
-
-                previous = new Text(current);
 
                 if(!valid)
                 {
                     throw new InterruptedIOException("Validation Failed");
                 }
-            }
 
-            System.out.print("Validation Succeed!");
+                previous = new Text(current);
+            }
         }
 
         public int compare(WritableComparable w1, WritableComparable w2) {
@@ -100,7 +92,13 @@ public class ValidateResult {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
+        job.setNumReduceTasks(1);
+
         job.waitForCompletion(true);
+
+        System.out.print("\n-----------------------" +
+                         "\n- Validation Succeed! -" +
+                         "\n-----------------------\n");
     }
 
     //region Helper
